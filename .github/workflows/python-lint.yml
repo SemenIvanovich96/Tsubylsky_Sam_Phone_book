@@ -1,0 +1,49 @@
+name: Python Lint (Flake8/PEP8)
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install flake8
+      run: pip install flake8
+
+    - name: Lint with flake8
+      id: lint
+      continue-on-error: true
+      run: |
+        flake8 \
+          --count \
+          --select=E9,F63,F7,F82 \
+          --show-source \
+          --statistics \
+          Phone_number/pythonProject1 \
+          --format=github
+
+    - name: Summary Flake8 results
+      if: failure() || steps.lint.conclusion != 'success'
+      run: |
+        echo "❌ Flake8 issues in Python ${{ matrix.python-version }} (Phone_number/pythonProject1)."
+        echo "Local: flake8 Phone_number/pythonProject1 --count --statistics"
+
+    - name: All clear
+      if: success()
+      run: echo "✅ Flake8 OK for ${{ matrix.python-version }}"
