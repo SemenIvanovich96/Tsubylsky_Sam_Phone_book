@@ -35,14 +35,14 @@ jobs:
           --select=E9,F63,F7,F82 \
           --show-source \
           --statistics \
-          Phone_nubmer/pythonProject1 \
+          Phone_number/pythonProject1 \
           --format=github
 
     - name: Summary Flake8 results
       if: failure() || steps.lint.conclusion != 'success'
       run: |
-        echo "❌ Flake8 issues in Python ${{ matrix.python-version }} (Phone_nubmer/pythonProject1)."
-        echo "Local: flake8 Phone_nubmer/pythonProject1 --count --statistics"
+        echo "❌ Flake8 issues in Python ${{ matrix.python-version }} (Phone_number/pythonProject1)."
+        echo "Local: flake8 Phone_number/pythonProject1 --count --statistics"
 
     - name: All clear
       if: success()
