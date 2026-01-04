@@ -2,7 +2,7 @@ name: Python Lint (Flake8/PEP8)
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: ['**']
   pull_request:
     branches: [ main ]
 
@@ -37,11 +37,11 @@ jobs:
           --show-source \
           --statistics \
           Phone_number/pythonProject1 \
-          --format=github  # Для аннотаций в PR [web:17]
+          --format=github
 
     - name: Summary Flake8 results
       if: steps.lint.outcome != 'success'
       run: |
         echo "❌ Flake8 detected issues in ${{ matrix.python-version }}. Check annotations/PR comments."
         echo "Run locally: flake8 dir1/project1 --count --statistics"
-      shell: bash [web:11][web:10]
+      shell: bash
