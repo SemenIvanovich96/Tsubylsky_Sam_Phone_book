@@ -6,6 +6,11 @@
 Модуль Model.py содержит в себе функции создания и сохранения телефонного справочника
 Модуль Controller.py содержит в себе наше меню выполненное в виде цикла While True
 Наши контакты и их данные сохраняются в файл phonebook.json
+
+## CI
+
+Add flake8 check in github action
+
 ##  Requirements
 
 `Python =  3.10`

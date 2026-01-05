@@ -2,8 +2,8 @@ from View import add_contact_manual_id, show_all, search_contact, delete_contact
 from Model import save_phonebook
 
 
-# Главное меню программы
 def main_menu(phonebook):
+    """ Главное меню программы."""
     while True:
         print("\n ТЕЛЕФОННЫЙ СПРАВОЧНИК ")
         print("1 - Добавить контакт")

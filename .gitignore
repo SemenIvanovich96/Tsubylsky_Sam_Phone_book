@@ -1,3 +1,4 @@
+git log --oneline -1
 Phone_number/pythonProject1/.idea
 Phone_number/pythonProject1/.venv
 .gitattributes

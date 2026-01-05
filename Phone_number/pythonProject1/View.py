@@ -1,5 +1,5 @@
-# Добавление нового контакта с вводом ID
 def add_contact_manual_id(phonebook):
+    """Добавление нового контакта с вводом ID"""
     try:
         new_id = int(input("Введите ID: "))
 
@@ -29,8 +29,8 @@ def add_contact_manual_id(phonebook):
         print(" ID должен быть целым числом!")
 
 
-# Показать все контакты в таблице
 def show_all(phonebook):
+    """Функция показывает все контакты в таблице."""
     if not phonebook["contacts"]:  # Проверяем пустой ли справочник
         print("Справочник пуст")
         return
@@ -42,12 +42,12 @@ def show_all(phonebook):
         print(f"{contact['id']:3} | {contact['name']:<10} | {contact['phone']:<13} | {contact['comment']}")
 
 
-# Поиск контакта по любому полю
 def search_contact(phonebook):
+    """ Поиск контакта по любому полю."""
     query = input("Введите имя, телефон или комментарий: ").strip().lower()
     found = False  # Флаг найденного контакта
     for contact in phonebook["contacts"]:
-        # Ищем в любом поле (регистронезависимо)
+        # Ищем в любом поле, где есть информация контактов
         if (query in contact["name"].lower() or
                 query in contact["phone"].lower() or
                 query in contact["comment"].lower()):
@@ -57,8 +57,8 @@ def search_contact(phonebook):
         print("Контакт не найден")
 
 
-# Удаление контакта по ID
 def delete_contact(phonebook):
+    """ Удаление контакта по ID."""
     show_all(phonebook)  # Показываем список для выбора
     try:
         contact_id = int(input("Введите ID для удаления: "))
@@ -73,8 +73,8 @@ def delete_contact(phonebook):
         print("Введите корректный ID")
 
 
-# Изменение существующего контакта
 def edit_contact(phonebook):
+    """ Изменение существующего контакта"""
     show_all(phonebook)  # Показываем список для выбора
     try:
         contact_id = int(input("Введите ID для изменения: "))
