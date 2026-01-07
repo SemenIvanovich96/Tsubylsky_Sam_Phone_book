@@ -4,7 +4,8 @@ from Model import save_phonebook
 
 def main_menu(phonebook):
     """ Главное меню программы."""
-    while True:
+    running = True
+    while running:
         print("\n ТЕЛЕФОННЫЙ СПРАВОЧНИК ")
         print("1 - Добавить контакт")
         print("2 - Показать все контакты")
@@ -28,6 +29,6 @@ def main_menu(phonebook):
         elif choice == "6":
             save_phonebook(phonebook)  # Сохраняем перед выходом
             print("Справочник сохранен.")
-            break  # Выход из цикла
+            running = False  # Выход из цикла
         else:
             print("Неверный выбор!")
