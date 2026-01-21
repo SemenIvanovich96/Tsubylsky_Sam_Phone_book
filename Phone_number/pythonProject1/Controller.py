@@ -1,34 +1,53 @@
-from View import add_contact_manual_id, show_all, search_contact, delete_contact, edit_contact
-from Model import save_phonebook
+from Model import PhoneBook
+from View import PhoneBookView
 
 
-def main_menu(phonebook):
-    """ Главное меню программы."""
-    running = True
-    while running:
-        print("\n ТЕЛЕФОННЫЙ СПРАВОЧНИК ")
-        print("1 - Добавить контакт")
-        print("2 - Показать все контакты")
-        print("3 - Найти контакт")
-        print("4 - Удалить контакт")
-        print("5 - Изменить контакт")
-        print("6 - Выход")
+class PhoneBookController:
 
-        choice = input("Выберите действие (1-6): ").strip()  # Получаем выбор пользователя
+    def __init__(self):
+        self.model = PhoneBook()
+        self.view = PhoneBookView()
 
-        if choice == "1":
-            add_contact_manual_id(phonebook)  # Вызов функции добавления
-        elif choice == "2":
-            show_all(phonebook)  # Показать все контакты
-        elif choice == "3":
-            search_contact(phonebook)  # Поиск контакта
-        elif choice == "4":
-            delete_contact(phonebook)  # Удаление контакта
-        elif choice == "5":
-            edit_contact(phonebook)  # Изменение контакта
-        elif choice == "6":
-            save_phonebook(phonebook)  # Сохраняем перед выходом
-            print("Справочник сохранен.")
-            running = False  # Выход из цикла
-        else:
-            print("Неверный выбор!")
+    def run(self):
+        """Главное меню."""
+        running = True
+        while running:
+            print("\n=== ТЕЛЕФОННЫЙ СПРАВОЧНИК ===")
+            print("1 - Добавить контакт    2 - Показать все контакты")
+            print("3 - Поиск контакта      4 - Удалить контакт")
+            print("5 - Изменить контакт    6 - Выход")
+
+            choice = input("Выбор (1-6): ").strip()
+
+            if choice == "1":
+                contact_data = self.view.add_contact_manual_id(self.model.data)
+                if contact_data:
+                    self.model.add_contact(contact_data)
+                    print("контакт добавлен")
+
+            elif choice == "2":
+                self.view.show_all(self.model.data)
+
+            elif choice == "3":
+                self.view.search_contact(self.model.data)
+
+            elif choice == "4":
+                contact_id = self.view.delete_contact(self.model.data)
+                if contact_id and self.model.delete_contact(contact_id):
+                    print("контакт удален")
+                else:
+                    print("контакт не найден")
+
+            elif choice == "5":
+                result = self.view.edit_contact(self.model.data)
+                if result:
+                    contact_id, updates = result
+                    if self.model.edit_contact(contact_id, updates):
+                        print("контакт обновлен")
+                    else:
+                        print("контакт Не найден")
+
+            elif choice == "6":
+                self.model.save()
+                print(" Справочник сохранен")
+                running = False

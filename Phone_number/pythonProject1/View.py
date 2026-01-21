@@ -1,105 +1,79 @@
-def add_contact_manual_id(phonebook):
-    """Добавление нового контакта с вводом ID"""
-    try:
-        new_id = int(input("Введите ID: "))
-
-        # Проверяем, не существует ли уже такой ID
-        for contact in phonebook["contacts"]:
-            if contact["id"] == new_id:
-                print(" ID уже существует! Выберите другой.")
-                return  # Выходим если ID занят
-
-        #  данные контакта
-        name = input("Имя: ").strip()
-        phone = input("Телефон: ").strip()
-        comment = input("Комментарий: ").strip()
-
-        # Создаем словарь контакта
-        contact = {
-            "id": new_id,
-            "name": name,
-            "phone": phone,
-            "comment": comment
-        }
-
-        phonebook["contacts"].append(contact)  # Добавляем в список контактов
-        print(f" Контакт '{name}' добавлен с ID {new_id}")
-
-    except ValueError:  # Обработка ошибки ввода не числа
-        print(" ID должен быть целым числом!")
+from typing import Dict, Any
 
 
-def show_all(phonebook):
-    """Функция показывает все контакты в таблице."""
-    if not phonebook["contacts"]:  # Проверяем пустой ли справочник
-        print("Справочник пуст")
-        return
+class PhoneBookView:
 
-    print("\nID | Имя        | Телефон      | Комментарий")
-    print("-" * 50)
-    # Выводим каждый контакт
-    for contact in phonebook["contacts"]:
-        print(f"{contact['id']:3} | {contact['name']:<10} | {contact['phone']:<13} | {contact['comment']}")
+    @staticmethod
+    def add_contact_manual_id(phonebook_data: Dict[str, Any]) -> Dict[str, str] | None:
+        """Ввод нового контакта"""
+        try:
+            new_id = input("Введите ID: ").strip()
 
+            # Проверка уникальности
+            if any(c["id"] == new_id for c in phonebook_data["contacts"]):
+                print("ID уже существует!")
+                return None
 
-def search_contact(phonebook):
-    """ Поиск контакта по любому полю."""
-    query = input("Введите имя, телефон или комментарий: ").strip().lower()
-    found = False  # Флаг найденного контакта
-    for contact in phonebook["contacts"]:
-        # Ищем в любом поле, где есть информация контактов
-        if (query in contact["name"].lower() or
-                query in contact["phone"].lower() or
-                query in contact["comment"].lower()):
-            print(f"ID: {contact['id']}, {contact['name']}: {contact['phone']} ({contact['comment']})")
-            found = True
-    if not found:
-        print("Контакт не найден")
+            name = input("Имя: ").strip()
+            phone = input("Телефон: ").strip()
+            comment = input("Комментарий: ").strip()
 
+            return {"id": new_id, "name": name, "phone": phone, "comment": comment}
 
-def delete_contact(phonebook):
-    """ Удаление контакта по ID."""
-    show_all(phonebook)  # Показываем список для выбора
-    try:
-        contact_id = int(input("Введите ID для удаления: "))
-        # Ищем контакт по ID и удаляем
-        for i, contact in enumerate(phonebook["contacts"]):
+        except KeyboardInterrupt:
+            print("\nОтменено.")
+            return None
+
+    @staticmethod
+    def show_all(phonebook_data: Dict[str, Any]) -> None:
+        """Показать все контакты"""
+        if not phonebook_data["contacts"]:
+            print("Справочник пуст")
+            return
+        print("\nID | Имя        | Телефон      | Комментарий")
+        print("-" * 50)
+        for c in phonebook_data["contacts"]:
+            print(f"{c['id']:3} | {c['name']:<10} | {c['phone']:<13} | {c['comment']}")
+
+    @staticmethod
+    def search_contact(phonebook_data: Dict[str, Any]) -> None:
+        """Поиск контакта"""
+        query = input("Поиск (имя/телефон/комментарий): ").strip().lower()
+        found = False
+        for c in phonebook_data["contacts"]:
+            if (query in c["name"].lower() or query in c["phone"].lower() or
+                    query in c["comment"].lower()):
+                print(f"ID: {c['id']}, {c['name']}: {c['phone']} ({c['comment']})")
+                found = True
+        if not found:
+            print("Не найдено")
+
+    @staticmethod
+    def delete_contact(phonebook_data: Dict[str, Any]) -> str | None:
+        """Удаление контакта"""
+        PhoneBookView.show_all(phonebook_data)
+        return input("ID для удаления: ").strip()
+
+    @staticmethod
+    def edit_contact(phonebook_data: Dict[str, Any]) -> tuple[str, Dict[str, str]] | None:
+        """Изменение контакта"""
+        PhoneBookView.show_all(phonebook_data)
+        contact_id = input("ID для изменения: ").strip()
+        if not contact_id:
+            return None
+
+        # Находим контакт для текущих значений
+        for contact in phonebook_data["contacts"]:
             if contact["id"] == contact_id:
-                removed = phonebook["contacts"].pop(i)  # Удаляем из списка
-                print(f" Удален: {removed['name']} (ID {removed['id']})")
-                return
-        print("Контакт не найден")
-    except ValueError:
-        print("Введите корректный ID")
-
-
-def edit_contact(phonebook):
-    """ Изменение существующего контакта"""
-    show_all(phonebook)  # Показываем список для выбора
-    try:
-        contact_id = int(input("Введите ID для изменения: "))
-
-        # Ищем контакт по ID
-        for i, contact in enumerate(phonebook["contacts"]):
-            if contact["id"] == contact_id:
-                print(f"Изменяем: {contact['name']} ({contact['phone']}, {contact['comment']})")
-
-                # Изменяем только заполненные поля (Enter = пропуск)
-                new_name = input(f"Новое имя [{contact['name']}]: ").strip()
+                updates = {}
+                new_name = input(f"Имя [{contact['name']}]: ").strip()
                 if new_name:
-                    contact['name'] = new_name
-
-                new_phone = input(f"Новый телефон [{contact['phone']}]: ").strip()
+                    updates["name"] = new_name
+                new_phone = input(f"Телефон [{contact['phone']}]: ").strip()
                 if new_phone:
-                    contact['phone'] = new_phone
-
-                new_comment = input(f"Новый комментарий [{contact['comment']}]: ").strip()
+                    updates["phone"] = new_phone
+                new_comment = input(f"Комментарий [{contact['comment']}]: ").strip()
                 if new_comment:
-                    contact['comment'] = new_comment
-
-                print(f" Контакт ID {contact_id} обновлен!")
-                return
-
-        print("Контакт не найден")
-    except ValueError:
-        print("Введите корректный ID")
+                    updates["comment"] = new_comment
+                return contact_id, updates
+        return None
