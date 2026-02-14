@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Contact:
+    """Класс передает данные наших контактов"""
     id: str
     name: str
     phone: str

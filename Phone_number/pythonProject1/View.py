@@ -2,6 +2,7 @@ from typing import Dict, Any
 
 
 class PhoneBookView:
+    """Представления телефонного справочника модуля View"""
 
     @staticmethod
     def add_contact_manual_id(phonebook_data: Dict[str, Any]) -> Dict[str, str] | None:
