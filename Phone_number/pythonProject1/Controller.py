@@ -5,11 +5,11 @@ from View import PhoneBookView
 class PhoneBookController:
     """Контроллер телефонного справочника в архитектуре MVC."""
 
-    def __init__(self):  # 4 ПРОБЕЛА!
+    def __init__(self):
         self.model = PhoneBook()
         self.view = PhoneBookView()
 
-    def run(self):  # 4 ПРОБЕЛА!
+    def run(self):
         """Главное меню."""
         running = True
         while running:
