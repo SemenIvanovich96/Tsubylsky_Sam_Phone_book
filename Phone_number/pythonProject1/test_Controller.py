@@ -6,13 +6,12 @@ from Model import PhoneBook
 @pytest.fixture
 def controller(tmp_path):
     """Создаём контроллер с временным файлом."""
-    # Создаём Model ОТДЕЛЬНО
+
     filename = tmp_path / "test.json"
     model = PhoneBook(filename)
 
-    # Создаём контроллер и вручную устанавливаем model
     controller = PhoneBookController()
-    controller.model = model  # ✅ Обходим сломанную инициализацию
+    controller.model = model
 
     return controller
 
